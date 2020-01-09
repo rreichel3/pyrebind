@@ -17,6 +17,9 @@ class DNSQuery:
 				lon = ord(data[ini])
 			self.qtype = ord(data[12+len(self.domain)+2])
 
+	def __str__(self):
+		return 'Domain: {}   Query Type: {}'.format(self.domain, self.qtype)
+	
 	def reply(self, ip):
 		packet = ''
 		if self.domain:
@@ -36,7 +39,8 @@ if __name__ == '__main__':
 		while 1:
 			data, addr = udp.recvfrom(1024)
 			p = DNSQuery(data)
-			# only IN A questions are supported
+			print(p)
+			"""# only IN A questions are supported
 			if p.domain and p.qtype == 1:
 				d = p.domain.split('.')
 				# basic validation
@@ -45,6 +49,7 @@ if __name__ == '__main__':
 						ip = d[int(time()) % 2].replace('-', '.')
 						print '%s -> %s' % (p.domain, ip)
 						udp.sendto(p.reply(ip), addr)
+						"""
 
 	except KeyboardInterrupt:
 		udp.close()
